@@ -8,27 +8,25 @@ The project addresses the critical need for automated surveillance systems that 
 
 ## Dataset Information
 
-### UCF50 Dataset
-- **Source**: University of Central Florida (UCF) Action Recognition Dataset
-- **Dataset URL**: [UCF50 Dataset](https://www.crcv.ucf.edu/data/UCF50.php)
-- **Description**: The UCF50 dataset contains 50 action categories with approximately 6,618 realistic videos taken from YouTube. The dataset is challenging due to large variations in camera motion, object appearance and pose, object scale, viewpoint, cluttered background, illumination conditions, etc.
-- **Classes**: 50 different human action categories
-- **Format**: Video files (.avi format)
-- **Usage**: Used for training and testing the suspicious activity detection models
+### Movies Fight Detection Dataset
+- **Source**: Kaggle (uploaded by naveenk903)
+- **Dataset URL**: [Movies Fight Detection Dataset](https://www.kaggle.com/datasets/naveenk903/movies-fight-detection-dataset)
+- **Description**: This dataset contains video clips extracted from various movies, labeled for fight and non-fight scenes. It is designed for the development and benchmarking of action recognition and violence/fight detection algorithms in video surveillance and entertainment analytics.
+- **Classes**: Fight, Non-Fight
+- **Format**: Video files (various formats)
+- **Usage**: Used as the primary dataset for training and testing suspicious activity (fight) detection models.
 
 ### KTH Actions Dataset
 - **Source**: Royal Institute of Technology (KTH), Sweden
 - **Dataset URL**: [KTH Actions Dataset](https://www.csc.kth.se/cvap/actions/)
-- **Description**: The KTH Action Dataset contains videos of six human action categories performed several times by 25 subjects in four different scenarios (outdoors, outdoors with scale variation, outdoors with different clothes, indoors). The videos are grayscale with controlled backgrounds and minimal camera motion, making it less challenging than UCF50.
+- **Description**: The KTH Action Dataset contains videos of six human action categories performed several times by 25 subjects in four different scenarios (outdoors, outdoors with scale variation, outdoors with different clothes, indoors). The videos are grayscale with controlled backgrounds and minimal camera motion.
 - **Classes**: 6 human action categories (walking, jogging, running, boxing, hand waving, hand clapping)
 - **Format**: Video files (.avi format)
 - **Usage**: Used as a benchmark for human activity recognition algorithms
 
-
-
 ### Third-Party Data Citation
 This research utilizes two third-party datasets:
-1. **UCF50 Dataset**: Curated and uploaded by the University of Central Florida, publicly available for research purposes and widely used in computer vision and action recognition research.
+1. **Movies Fight Detection Dataset**: Curated and uploaded by naveenk903 on Kaggle, publicly available for research purposes and widely used for fight/violence detection in video analytics.
 2. **KTH Actions Dataset**: Provided by KTH Royal Institute of Technology, commonly used for human activity recognition research and validation.
 
 ## Code Information
@@ -40,12 +38,12 @@ The project implements three main deep learning architectures:
 1. **VGG16-LSTM Model**
    - Architecture: VGG16 as feature extractor + LSTM for temporal modeling
    - Purpose: Extracts spatial features using VGG16 and processes temporal sequences with LSTM
-   - Performance: 82.67% accuracy, 82.99% precision, 94.25% ROC AUC
+   - Performance: 82.67% accuracy, 82.99% precision, 94.25% ROC AUC (on benchmark dataset)
 
 2. **Motion Influence Map (MIM) Model**
    - Architecture: Custom CNN-based model for motion analysis
    - Purpose: Focuses on motion patterns and temporal dynamics
-   - Performance: 60.0% accuracy
+   - Performance: 60.0% accuracy (on benchmark dataset)
 
 3. **Long-term Recurrent Convolutional Network (LRCN)**
    - Architecture: CNN + LSTM hybrid for video sequence analysis
@@ -62,8 +60,9 @@ The project implements three main deep learning architectures:
 
 ### Prerequisites
 1. Ensure you have Python 3.7+ installed
-2. Download the UCF50 dataset and place it in a `Dataset` folder
-3. Install required dependencies (see Requirements section)
+2. Download the Movies Fight Detection Dataset from Kaggle and place it in a `Dataset` folder
+3. (Optional) Download the KTH Actions Dataset for benchmarking
+4. Install required dependencies (see Requirements section)
 
 ### Implementation Steps
 
@@ -71,7 +70,7 @@ The project implements three main deep learning architectures:
    ```bash
    # Create dataset directory
    mkdir Dataset
-   # Download and extract UCF50 dataset to Dataset folder
+   # Download and extract Movies Fight Detection Dataset to Dataset folder
    ```
 
 2. **Install Dependencies**
@@ -137,7 +136,7 @@ pafy>=0.5.5
    - Frame extraction at 30 FPS
    - Resize frames to 64x64 pixels
    - Normalize pixel values to [0,1] range
-   - Handle both UCF50 and KTH datasets with consistent preprocessing
+   - Handle both Movies Fight Detection and KTH datasets with consistent preprocessing
 
 2. **Feature Extraction**
    - VGG16: Extract spatial features from individual frames
@@ -149,13 +148,13 @@ pafy>=0.5.5
    - Batch size: 4-8 samples
    - Epochs: 50 (with early stopping)
    - Optimizer: Adam with learning rate 0.001
-   - Cross-dataset validation using KTH dataset
+   - Cross-dataset validation using KTH dataset (optional)
 
 4. **Evaluation Metrics**
    - Accuracy, Precision, Recall, F1-Score
    - ROC AUC, Matthews Correlation Coefficient
    - Confusion Matrix Analysis
-   - Cross-dataset performance evaluation
+   - Cross-dataset performance evaluation (if using KTH)
 
 ### Model Architecture Details
 
@@ -196,13 +195,13 @@ model = Sequential([
 
 ### Technical Limitations
 1. **Computational Complexity**: High GPU memory requirements for real-time processing
-2. **Dataset Bias**: Limited to UCF50 action categories
+2. **Dataset Bias**: Limited to fight/non-fight action categories
 3. **Environmental Factors**: Performance may degrade in poor lighting conditions
 4. **Scale Sensitivity**: Model performance varies with object scale and distance
 
 ### Research Limitations
-1. **Limited Dataset**: Only 50 action categories from UCF50 and 6 from KTH
-2. **Dataset Diversity**: Limited cross-dataset validation between UCF50 and KTH
+1. **Limited Dataset**: Only fight/non-fight categories from Movies Fight Detection and 6 from KTH
+2. **Dataset Diversity**: Limited cross-dataset validation between Movies Fight Detection and KTH
 3. **Real-time Constraints**: Processing speed limitations for live video
 4. **Generalization**: May not generalize well to unseen action categories
 
@@ -216,7 +215,7 @@ model = Sequential([
 
 ### Dataset Citations
 ```
-Soomro, K., Zamir, A. R., & Shah, M. (2012). UCF101: A dataset of 101 human actions classes from videos in the wild. arXiv preprint arXiv:1212.0402.
+Naveen Kumar (2022). Movies Fight Detection Dataset. Kaggle. https://www.kaggle.com/datasets/naveenk903/movies-fight-detection-dataset
 
 Schuldt, C., Laptev, I., & Caputo, B. (2004). Recognizing human actions: A local SVM approach. In Proceedings of the 17th International Conference on Pattern Recognition (ICPR'04) (Vol. 3, pp. 32-36). IEEE.
 ```
@@ -250,4 +249,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Note**: This project is for research and educational purposes. Please ensure compliance with local regulations when deploying surveillance systems in real-world applications. 
+**Note**: This project is for research and educational purposes. Please ensure compliance with local regulations when deploying surveillance systems in real-world applications.
